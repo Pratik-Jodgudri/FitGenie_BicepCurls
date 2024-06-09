@@ -4,4 +4,4 @@ numpy
 opencv-python
 mediapipe
 av
-pygame
+pyaudio
