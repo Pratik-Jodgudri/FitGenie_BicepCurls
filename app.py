@@ -4,18 +4,13 @@ import av
 import PoseModule as pm
 import streamlit as st
 from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, VideoHTMLAttributes
-import pygame
 import threading
 import time
+import pyaudio
+import wave
 
-# Initialize pygame mixer
-pygame.mixer.init()
-# Load the mp3 sound file
-sound = pygame.mixer.Sound("ding.mp3")
-
-# Function to play sound in a separate thread
-def play_sound():
-    sound.play()
+# Load the ding sound file
+ding_file = "ding.wav"
 
 class VideoProcessor(VideoProcessorBase):
     def __init__(self):
@@ -47,13 +42,13 @@ class VideoProcessor(VideoProcessorBase):
                 if self.direction == 0:
                     self.count += 0.5
                     self.direction = 1
-                    # threading.Thread(target=play_sound).start()  # Play sound when rep is counted
+                    threading.Thread(target=self.play_sound).start()  # Play sound when rep is counted
             if per == 0:
                 color = (0, 255, 0)
                 if self.direction == 1:
                     self.count += 0.5
                     self.direction = 0
-                    threading.Thread(target=play_sound).start()  # Play sound when rep is counted
+                    threading.Thread(target=self.play_sound).start()  # Play sound when rep is counted
 
             # Draw Bar
             cv2.rectangle(img, (maxw-100, maxh-400), (maxw - 50, maxh - 50), color, 3)
@@ -65,6 +60,31 @@ class VideoProcessor(VideoProcessorBase):
             cv2.putText(img, str(int(self.count)), (40, 70), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 0), 4)
 
         return av.VideoFrame.from_ndarray(img, format="bgr24")
+    
+    def play_sound(self):
+        CHUNK = 1024
+
+        # Load ding sound file
+        wf = wave.open(ding_file, 'rb')
+
+        # Open PyAudio stream
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+
+        data = wf.readframes(CHUNK)
+
+        # Play ding sound
+        while len(data) > 0:
+            stream.write(data)
+            data = wf.readframes(CHUNK)
+
+        # Stop and close the stream
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
 
 def main():
     # Page Configuration
