@@ -72,8 +72,8 @@ def main():
                  * Ensure you stand sideways to the camera with your right side visible.
         """)
         st.write("""
-            2. Perform bicep curls.
-            3. Your rep count will be displayed on the screen.
+            3. Perform bicep curls.
+            4. Your rep count will be displayed on the screen.
         """)
 
     # Video Stream and Feedback
