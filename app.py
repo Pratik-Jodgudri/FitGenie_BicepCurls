@@ -54,7 +54,13 @@ class VideoProcessor(VideoProcessorBase):
 
 def main():
     # Page Configuration
-    st.set_page_config(page_title="Bicep Curl Counter", layout="wide")
+    st.set_page_config(
+        page_title="Bicep Curl Counter", 
+        layout="wide", 
+        menu_items = {
+            'About': 'Made with ❤️ by Pratik Jodgudri'
+        }
+    )
 
     # Main Title and Description
     st.title("🏋️ Bicep Curl Counter App")
@@ -84,6 +90,14 @@ def main():
         video_processor_factory=VideoProcessor,
         rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
         media_stream_constraints={"video": True, "audio": False}
+    )
+
+    # Footer with your name
+    st.markdown(
+        """
+        ***
+        Made with ❤️ by Pratik Jodgudri
+        """
     )
 
 if __name__ == "__main__":
