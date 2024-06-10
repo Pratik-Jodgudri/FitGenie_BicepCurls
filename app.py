@@ -64,7 +64,8 @@ def main():
     with st.sidebar:
         st.header("Instructions")
         st.write("""
-            1. Position yourself in front of the camera.
+            1. Select Camera Device (if you have multiple cameras connected)
+            2. Position yourself in front of the camera as shown in the image below.
         """)
         st.image("bicep_curl.jpg", caption="Correct posture for bicep curls", use_column_width=True)
         st.write("""
